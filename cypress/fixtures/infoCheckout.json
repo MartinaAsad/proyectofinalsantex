@@ -1,0 +1,21 @@
+{
+  "valido":
+  {
+    "FirstName": "Martina",
+    "LastName": "Asad",
+    "Zip": 1845
+  },
+
+  "invalido":
+  {
+  "FirstName": null,
+    "LastName": null,
+    "Zip": null 
+  },
+  "tipoDatoIncorrecto":
+  {
+  "FirstName": 450,
+    "LastName": 450,
+    "Zip": "codigo" 
+  }
+}
