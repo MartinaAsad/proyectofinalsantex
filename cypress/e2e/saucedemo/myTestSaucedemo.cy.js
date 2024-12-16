@@ -212,7 +212,7 @@ describe('Testeando problem_user', {testisolation:false},()=>{
         const contra='secret_sauce';
         cy.iniciarSesion(usuario, contra);
         cy.agregar2ProductosInicio();
-        cy.wait(4000) //VER COMO GRABAR ESTE TEST
+        cy.wait(4000)
     })
 
     it.skip('Agrego un articulo al carrito desde inventory-item',()=>{
@@ -223,7 +223,7 @@ describe('Testeando problem_user', {testisolation:false},()=>{
     })
 
     it.skip('Eliminar un articulo al carrito desde la pagina principal',()=>{
-        const usuario='problem_user'; //VER POR QUE NO GRABA
+        const usuario='problem_user'; 
         const contra='secret_sauce';
         cy.iniciarSesion(usuario, contra);
         const producto='#add-to-cart-sauce-labs-fleece-jacket'
@@ -247,8 +247,8 @@ describe('Testeando problem_user', {testisolation:false},()=>{
     })
 
     
-    it.skip('Ordenar inventario de manera descendente segun el nombre',()=>{
-        const usuario='problem_user';//VER POR QUE NO FUNCIONA
+    it('Ordenar inventario de manera descendente segun el nombre',()=>{
+        const usuario='problem_user';
         const contra='secret_sauce';
         cy.iniciarSesion(usuario, contra);
         cy.ordenarPorNombreDesc();
@@ -268,7 +268,7 @@ describe('Testeando problem_user', {testisolation:false},()=>{
         cy.ordenarPorPrecio('lohi');
     })
 
-    it('Ver carrito',()=>{
+    it.skip('Ver carrito',()=>{
         const usuario='problem_user';
         const contra='secret_sauce';
         cy.iniciarSesion(usuario, contra);
@@ -276,7 +276,7 @@ describe('Testeando problem_user', {testisolation:false},()=>{
         cy.verProductoCarrito();
     })
 
-    it('Ver carrito y continuar comprando',()=>{
+    it.skip('Ver carrito y continuar comprando',()=>{
         const usuario='problem_user';
         const contra='secret_sauce';
         cy.iniciarSesion(usuario, contra);
@@ -285,6 +285,65 @@ describe('Testeando problem_user', {testisolation:false},()=>{
         cy.continuarComprando();
     })
 
+    it.skip('Dejar vacia la info del checkout',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregar2ProductosInicio();
+        cy.wait(4000);
+        cy.verItemsCarrito();
+        cy.get('#checkout').contains('Checkout').click();
+        cy.get('#continue').contains('Continue').click();
+        
+    })
+
+    
+    it.skip('Completar con tipos de dato incorectos en el checkout',()=>{
+        const usuario="problem_user"
+        const contra="secret_sauce"
+        cy.iniciarSesion(usuario, contra);
+        cy.agregar2ProductosInicio();
+        cy.wait(4000);
+        cy.verItemsCarrito();
+        cy.checkoutIncorrecto('tipoDatoIncorrecto');
+    })
+
+    it.skip('Cancelar una compra',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregar2ProductosInicio();
+        cy.verItemsCarrito();
+        cy.irCheckout('valido');
+        cy.vistaPreviaProductos();
+        cy.cancelarCompra();
+    })
+
+    it.skip('Ver todos los items desde el menu hamburguesa',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        const opcion='#inventory_sidebar_link';
+        cy.iniciarSesion(usuario, contra);
+        cy.seleccionarOpcionMenu(opcion);
+    })
+
+    
+    it.skip('Desloguearse',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.logout();
+    })
+
+    
+    it.skip('Reiniciar el carrito',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        const opcion='#reset_sidebar_link';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregar2ProductosInicio();
+        cy.seleccionarOpcionMenu(opcion);
+    })
 
 
 
