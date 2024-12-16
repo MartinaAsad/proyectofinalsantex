@@ -1,0 +1,11 @@
+{
+    "imagenes":{
+        "imagen1":"cypress/fixtures/backpack.jpg",
+        "imagen2":"cypress/fixtures/bike.jpg",
+        "imagen3":"cypress/fixtures/bolt.jpg",
+        "imagen4":"cypress/fixtures/sauce-pullover.jpg",
+        "imagen5":"cypress/fixtures/red-onesie.jpg",
+        "imagen6":"cypress/fixtures/red-tatt.jpg"
+    }
+  
+}

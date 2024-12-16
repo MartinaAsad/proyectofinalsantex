@@ -9,10 +9,15 @@ Cypress.Commands.add('iniciarSesion', (usuario, contra) => {
 
 Cypress.Commands.add('agregar2ProductosInicio', () => {
     cy.get('#add-to-cart-sauce-labs-fleece-jacket').click();
+    cy.wait(200)
     cy.get('#add-to-cart-sauce-labs-bolt-t-shirt').click();
+    cy.wait(200)
+    cy.get('#remove-sauce-labs-bolt-t-shirt').contains('Remove')
+    cy.wait(200)
+    cy.get('#remove-sauce-labs-fleece-jacket').contains('Remove')
 })
 
-Cypress.Commands.add('logout',()=>{
+Cypress.Commands.add('logout', () => {
     cy.get('#react-burger-menu-btn').click();
     cy.get('#logout_sidebar_link').click();
     cy.clearCookies();
@@ -43,7 +48,7 @@ Cypress.Commands.add('verProductoCarrito', () => {
     cy.get('#remove-sauce-labs-bolt-t-shirt').contains('Remove')
 })
 
-Cypress.Commands.add('continuarComprando',()=>{
+Cypress.Commands.add('continuarComprando', () => {
     cy.get('#continue-shopping').click();
     cy.wait(200);
     cy.get('[data-test="inventory-container"]').should('be.visible')
@@ -72,7 +77,7 @@ Cypress.Commands.add('checkoutIncorrecto', (type = 'tipoDatoIncorrecto') => {
     cy.wait(400)
     cy.get('.error-message-container.error').should('be.visible');
     cy.get('#continue').contains('Continue').click();
-    
+
 })
 
 Cypress.Commands.add('vistaPreviaProductos', () => {
@@ -131,51 +136,79 @@ Cypress.Commands.add('cancelarCompra', () => {
     cy.get('#inventory_container').should('be.visible')
 })
 
-Cypress.Commands.add('verListaProductos', () => {
-    //cy.get(producto).click();
-    cy.get('.inventory_item_label>a').eq(0).contains('Sauce').should('be.visible');
-    cy.get('.inventory_item_label>a').eq(1).contains('Sauce').should('be.visible');
-    cy.get('.inventory_item_label>a').eq(2).contains('Sauce').should('be.visible');
-    cy.get('.inventory_item_label>a').eq(3).contains('Sauce').should('be.visible');
-    cy.get('.inventory_item_label>a').eq(4).contains('Sauce').should('be.visible');
-    cy.get('.inventory_item_label>a').eq(5).contains('Sauce').should('be.visible');
+Cypress.Commands.add('verListaProductos', (type = 'imagenes') => {
+    for (let i = 0; i < 6; i++) {
+        cy.get('.inventory_item_label > a')
+            .eq(i)
+            .then(($imagen) => {
+                if ($imagen.length > 0) {
+                    // Verifica manualmente si contiene 'Sauce' y está visible
+                    const contieneTexto = $imagen.text().includes('Sauce');
+                    const esVisible = Cypress.$($imagen).is(':visible');
+                    if (!contieneTexto || !esVisible) {
+                        cy.log(`Error en la posición ${i}: No contiene 'Sauce' o no está visible`);
+                    } else {
+                        cy.log(`Elemento en la posición ${i}: válido`);
+                    }
+                } else {
+                    cy.log(`El elemento en la posición ${i} no está presente`);
+                }
+            });
+    }
+
+    /*.fixture('chequearImagenes').then((data) => {
+        const urls=data.imagenes;
+
+        const imagenes=Object.values(urls)
+        for(var i = 0; i <6;i++){
+            cy.get('.inventory_item_img img').eq(i).selectFile(imagenes[i]);
+        }
+    })*/
     cy.get('.inventory_item_desc').should('be.visible')
     cy.get('.btn_primary').should('be.visible')
 })
 
+let tituloObtenido;
 Cypress.Commands.add('verProductosDetallados', () => {
-    //variable donde asigno un numero random entre 0 y 5
+    // Función para obtener un número aleatorio entre un rango
     const getRandomInteger = (min, max) => {
         min = Math.ceil(min)
         max = Math.floor(max)
-      
+
         return Math.floor(Math.random() * (max - min)) + min
-      }
-      
-    const nroItem=getRandomInteger(0,5)
-    cy.get('.inventory_item_label > a').eq(nroItem).click();
-    cy.get('.inventory_details_container .inventory_details_img_container').should('be.visible');
-    cy.get('.inventory_details_container .inventory_details_name').should('be.visible');
-    cy.get('.inventory_details_container .inventory_details_desc').should('be.visible');
-    cy.get('.inventory_details_container .inventory_details_price').should('be.visible');
-    cy.get('.inventory_details_container .inventory_details_desc_container .btn').should('be.visible');
-    cy.get('.left_component .btn_secondary.back').click();
-    cy.get('.inventory_item_label > a').should('be.visible');
-})
+    }
+    const nroItem = getRandomInteger(0, 5)
+
+    let titulo;
+
+    cy.wait(200)
+    cy.get('.inventory_item_label > a').eq(nroItem).click().invoke('text').then((titulo) => {
+        tituloObtenido = titulo.trim();
+        cy.get('.inventory_details_container .inventory_details_img_container').should('be.visible');
+        cy.get('.inventory_details_container .inventory_details_name').should('be.visible');
+        cy.get('.inventory_details_container .inventory_details_desc').should('be.visible');
+        cy.get('.inventory_details_container .inventory_details_price').should('be.visible');
+        cy.get('.inventory_details_container .inventory_details_desc_container .btn').should('be.visible');
+        cy.get('.inventory_details_container .inventory_details_name').should('have.text', tituloObtenido);
+        cy.get('.left_component .btn_secondary.back').click();
+        cy.get('.inventory_item_label > a').should('be.visible');
+    });
+});
+
 Cypress.Commands.add('seleccionarOpcionMenu', (opcion) => {
     cy.get('#react-burger-menu-btn').click();
     cy.get(opcion).click();
 
     if (opcion === '#reset_sidebar_link') {
-            cy.get('#reset_sidebar_link').click();
-           // cy.wait(200)
-            cy.get('[data-test="remove-sauce-labs-fleece-jacket"]').contains('Add to cart');
-            cy.get('[data-test="remove-sauce-labs-bolt-t-shirt"]').contains('Add to cart')
-            //cy.get(200)
-            cy.get('#shopping_cart_container > a > span').should('be.empty')
+        cy.get('#reset_sidebar_link').click();
+        // cy.wait(200)
+        cy.get('[data-test="remove-sauce-labs-fleece-jacket"]').contains('Add to cart');
+        cy.get('[data-test="remove-sauce-labs-bolt-t-shirt"]').contains('Add to cart')
+        //cy.get(200)
+        cy.get('#shopping_cart_container > a > span').should('be.empty')
     }
 
-    if(opcion == '#inventory_sidebar_link'){
+    if (opcion == '#inventory_sidebar_link') {
         cy.get('.inventory_item_label>a').should('be.visible');
     }
 })
@@ -186,25 +219,29 @@ Cypress.Commands.add('agregarProductoDesdeDetalle', () => {
     const getRandomInteger = (min, max) => {
         min = Math.ceil(min)
         max = Math.floor(max)
-      
+
         return Math.floor(Math.random() * (max - min)) + min
-      }
+    }
 
     //variable donde guardo el titulo del item seleccionado de manera aleatoria
     let titulo;
-      
-    const nroItem=getRandomInteger(0,5)
-    cy.get('.inventory_item_label > a').eq(nroItem).click().invoke('text').then((titulo)=>{
+
+    const nroItem = getRandomInteger(0, 5)
+    cy.wait(700)
+    cy.get('.inventory_item_label > a').eq(nroItem).click().invoke('text').then((titulo) => {
         titulo2 = titulo.trim();
+        cy.wait(400)
         cy.get('.inventory_details_container .inventory_details_desc_container .btn').click();
-    cy.get('#shopping_cart_container > a').click();
-    cy.get('.cart_quantity').contains('1')
-    cy.wait(200)
-    cy.get('.cart_item_label>a').should('contain',titulo2)
+        cy.wait(400)
+        cy.get('#shopping_cart_container > a').click();
+        cy.wait(400)
+        cy.get('.cart_quantity').contains('1')
+        cy.wait(400)
+        cy.get('.cart_item_label>a').should('contain', titulo2)
     });
 })
 
-Cypress.Commands.add('eliminarProductoDesdeDetalle',()=>{
+Cypress.Commands.add('eliminarProductoDesdeDetalle', () => {
     cy.get('[data-test="continue-shopping"]').click();
     cy.get('.inventory_item_label>a').contains(titulo2).click();
     cy.get('#remove').click();
@@ -219,26 +256,26 @@ Cypress.Commands.add('ordenarPorPrecio', (select) => {
     cy.wait(2000)
     //cy.get('#header_container > div.header_secondary_container > div > span > span').first().click();
     cy.wait(2000)//comentarop
-    
-    if(select=='hilo'){
+
+    if (select == 'hilo') {
         cy.get('.product_sort_container').select('hilo')
         cy.get('.inventory_item_price').then(($precios) => {
             //obtener el precio de cada item
             const p = [...$precios].map((precio) => parseFloat(precio.textContent.trim().replace('$', '')))
             const preciosOrdenados = [...p].sort((a, b) => b - a)
             expect(p).to.deep.equal(preciosOrdenados);
-            console.log('contenido de array 1'+p)
-            console.log('contenido de array 2'+preciosOrdenados)
+            console.log('contenido de array 1' + p)
+            console.log('contenido de array 2' + preciosOrdenados)
 
         })
-    }else if (select=='lohi'){
+    } else if (select == 'lohi') {
         cy.get('.product_sort_container').select('lohi')
         cy.get('.inventory_item_price').then(($precios) => {
             //obtener el precio de cada item
             const p = [...$precios].map((precio) => parseFloat(precio.textContent.trim().replace('$', '')))
             const preciosOrdenados = [...p].sort((a, b) => a - b);
-            console.log('contenido de array 1'+p)
-            console.log('contenido de array 2'+preciosOrdenados)
+            console.log('contenido de array 1' + p)
+            console.log('contenido de array 2' + preciosOrdenados)
             expect(p).to.deep.equal(preciosOrdenados);
         })
     }

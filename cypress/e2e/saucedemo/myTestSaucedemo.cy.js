@@ -170,8 +170,127 @@ describe('Testeando standard_user', {testisolation:false},()=>{
         cy.iniciarSesion(usuario, contra);
         cy.ordenarPorPrecio('lohi');
     })
+    
+})
+describe('Testeando problem_user', {testisolation:false},()=>{
+    it.skip('Aquí vamos a ver el proceso de compra del user 2',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregar2ProductosInicio();
+        cy.wait(4000);
+        cy.verItemsCarrito();
+        cy.irCheckout('valido');
+        cy.vistaPreviaProductos();
+        cy.confirmarCompra();
+    })
+    
+    it.skip('Aqui vemos el catalogo de productos',()=>{//VER QUE ONDA ESTE TEST
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.verListaProductos();
+    })
+
+    it.skip('Desloguearnos habiendo guardado previamnete productos',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregar2ProductosInicio();
+        cy.logout();
+    })
+
+    it.skip('Aquí vemos informacion detallada del producto',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.verProductosDetallados();
+    })
+
+    it.skip('Agrego un articulo al carrito desde la pagina principal',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregar2ProductosInicio();
+        cy.wait(4000) //VER COMO GRABAR ESTE TEST
+    })
+
+    it.skip('Agrego un articulo al carrito desde inventory-item',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregarProductoDesdeDetalle();
+    })
+
+    it.skip('Eliminar un articulo al carrito desde la pagina principal',()=>{
+        const usuario='problem_user'; //VER POR QUE NO GRABA
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        const producto='#add-to-cart-sauce-labs-fleece-jacket'
+        cy.agregarProductoCarrito(producto);
+        cy.eliminarProductoCarrito(producto);
+    })
+
+    it.skip('Eliminar un articulo al carrito desde inventory-item',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregarProductoDesdeDetalle();
+        cy.eliminarProductoDesdeDetalle();
+    })
+
+    it.skip('Ordenar inevntario de manera ascendente segun el nombre',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.ordenarPorNombreAsc();
+    })
+
+    
+    it.skip('Ordenar inventario de manera descendente segun el nombre',()=>{
+        const usuario='problem_user';//VER POR QUE NO FUNCIONA
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.ordenarPorNombreDesc();
+    })
+
+    it.skip('Ordenar inventario de manera ascendente segun el precio',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.ordenarPorPrecio('hilo');
+    })
+
+    it.skip('Ordenar inventario de manera descendente segun el precio',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.ordenarPorPrecio('lohi');
+    })
+
+    it('Ver carrito',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregar2ProductosInicio();
+        cy.verProductoCarrito();
+    })
+
+    it('Ver carrito y continuar comprando',()=>{
+        const usuario='problem_user';
+        const contra='secret_sauce';
+        cy.iniciarSesion(usuario, contra);
+        cy.agregar2ProductosInicio();
+        cy.verProductoCarrito();
+        cy.continuarComprando();
+    })
+
 
 
 
     
+
+    
+
+
 })
